@@ -33,7 +33,55 @@ class BST {
         	return rt;
         }
 	}
+	
+	public BinNode[] find2(BinNode r, BinNode parent, int e) {
+		if (r == null) {
+			BinNode[] rt = {null, parent};
+			return rt;
+		}
+		if (e < r.getElement()) {
+			return find2(r.getLeft(), r, e);
+		} else if (e > r.getElement()) {
+			return find2(r.getRight(), r, e);
+		} else {
+			BinNode[] rt = {r, parent};
+			return rt;
+		}
+	}
+	public BinNode[] find2(int e) {
+		return this.find2(root, null, e);
+	}
+	
+	public BinNode find(int e) {
+		return find2(e)[0];
+	}
     
+	public boolean remove(int e) {
+		BinNode f = find2(e)[0];
+		BinNode p = find2(e)[1];
+		if (f == null) return false;
+		if (p == null) {
+			if (f.getRight() == null) {
+				root = f.getLeft();
+			} else {//右子树不为空
+				BinNode t = f.getRight();
+				BinNode tp = null;
+				while (t.getLeft() != null) {
+					tp = t;
+					t = t.getLeft();
+				}
+				if (tp == null) {
+					t.setLeft(root.getLeft());
+					root = t;
+				}
+				
+			}
+		}
+		
+		
+	}
+	
+	
     public int getHeight(BinNode rt) {
     	if (rt == null) return 0;
     	else{
@@ -147,7 +195,23 @@ class BST {
         System.out.println(tree.root);
         System.out.println("Height : " + h);
         System.out.println("Node Count : " + tree.nodecount);
-    	tree.printtree(2, "*");
+        
+        int digits = 0;
+        if (tree.root!= null) {
+        	BinNode m = tree.root;
+        	while (m.getRight() != null) m = m.getRight();
+        	int max = m.getElement();
+        	digits = 0;
+        	while(max != 0) {
+        		max = max/10;
+        		digits++;
+        	}
+        }
+    	tree.printtree(digits, "*");
+    	System.out.println("Find : " + (tree.find2(23))[0].getElement());
+    	System.out.println("Find : parent :  " + (tree.find2(23))[1].getElement());
+    	
+    	
     }
     	
     
