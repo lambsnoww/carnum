@@ -1,6 +1,5 @@
 package lin.datastructure;
 
-
 class BST {
 	private BinNode root;
 	private int nodecount;
@@ -42,56 +41,61 @@ class BST {
 		}
 	}
 
-	public BinNode[] find2(BinNode r, BinNode parent, int e) {
-		if (r == null) {
-			BinNode[] rt = { null, parent };
-			return rt;
-		}
-		if (e < r.getElement()) {
-			return find2(r.getLeft(), r, e);
-		} else if (e > r.getElement()) {
-			return find2(r.getRight(), r, e);
-		} else {
-			BinNode[] rt = { r, parent };
-			return rt;
-		}
-	}
-
-	public BinNode[] find2(int e) {
-		return this.find2(root, null, e);
+	/*
+	 * public BinNode[] find2(BinNode r, BinNode parent, int e) { if (r == null)
+	 * { BinNode[] rt = { null, parent }; return rt; } if (e < r.getElement()) {
+	 * return find2(r.getLeft(), r, e); } else if (e > r.getElement()) { return
+	 * find2(r.getRight(), r, e); } else { BinNode[] rt = { r, parent }; return
+	 * rt; } }
+	 * 
+	 * public BinNode[] find2(int e) { return this.find2(root, null, e); }
+	 */
+	public BinNode find(BinNode r, int e) {
+		if (r == null)
+			return null;
+		if (e < r.getElement())
+			return find(r.getLeft(), e);
+		else if (e > r.getElement())
+			return find(r.getRight(), e);
+		else
+			return r;
 	}
 
 	public BinNode find(int e) {
-		return find2(e)[0];
+		return find(root, e);
 	}
 
-	public boolean remove(int e) {
-		BinNode f = find2(e)[0];
-		BinNode p = find2(e)[1];
-		// 没找到
-		if (f == null)
+	public boolean deleteBST(BinNode p, int e) {
+		if (p == null)
 			return false;
-		// 找到了，是叶结点
-		if (f.getLeft() == null && f.getRight() == null) {
-			if (p == null)
-				root = null;
-			else {
-				if (f.getElement() < p.getElement())
-					p.setLeft(null);
-				else
-					p.setRight(null);
-			}
-		} else {// 找到了，非叶结点
-			if (p == null) {
-				BinNode sub = f.getRight();
-				BinNode psub = f;
-				while (sub.getLeft() != null) {
-					psub = sub;
-					sub = sub.getLeft();
-				}
-			}
-		}
+		else if (e == p.getElement())
+			return delete(p);
+		else if (e < p.getElement())
+			return deleteBST(p.getLeft(), e);
+		else if (e > p.getElement())
+			return deleteBST(p.getRight(), e);
+		else
+			return false;// 这句必须写吗？
+	}
 
+	public boolean deleteBST(int e) {
+		return this.deleteBST(root, e);
+	}
+
+	public boolean delete(BinNode p) {
+		if (p.getLeft() == null)
+			p = p.getRight();
+		else if (p.getRight() == null)
+			p = p.getLeft();
+		else {
+			BinNode s = p.getRight();
+			while (s.getLeft() != null) {
+				s = s.getLeft();
+			}
+			p.setElement(s.getElement());
+			delete(s);
+		}
+		return true;
 	}
 
 	public int getHeight(BinNode rt) {
@@ -228,9 +232,13 @@ class BST {
 			}
 		}
 		tree.printtree(digits, "*");
-		System.out.println("Find : " + (tree.find2(23))[0].getElement());
-		System.out.println("Find : parent :  "
-				+ (tree.find2(23))[1].getElement());
+		System.out.println("Find : " + (tree.find(23)).getElement());
+		System.out.println("Find : parent :  " + (tree.find(23)).getElement());
+		System.out.println("Delete 12, 26");
+		tree.deleteBST(12);
+		tree.printtree(digits, ".");
+		tree.deleteBST(26);
+		tree.printtree(digits, ".");
 
 	}
 
