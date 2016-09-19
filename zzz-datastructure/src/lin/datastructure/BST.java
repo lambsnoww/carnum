@@ -41,15 +41,25 @@ class BST {
 		}
 	}
 
-	/*
-	 * public BinNode[] find2(BinNode r, BinNode parent, int e) { if (r == null)
-	 * { BinNode[] rt = { null, parent }; return rt; } if (e < r.getElement()) {
-	 * return find2(r.getLeft(), r, e); } else if (e > r.getElement()) { return
-	 * find2(r.getRight(), r, e); } else { BinNode[] rt = { r, parent }; return
-	 * rt; } }
-	 * 
-	 * public BinNode[] find2(int e) { return this.find2(root, null, e); }
-	 */
+	public BinNode[] find2(BinNode r, BinNode parent, int e) {
+		if (r == null) {
+			BinNode[] rt = { null, parent };
+			return rt;
+		}
+		if (e < r.getElement()) {
+			return find2(r.getLeft(), r, e);
+		} else if (e > r.getElement()) {
+			return find2(r.getRight(), r, e);
+		} else {
+			BinNode[] rt = { r, parent };
+			return rt;
+		}
+	}
+
+	public BinNode[] find2(int e) {
+		return this.find2(root, null, e);
+	}
+
 	public BinNode find(BinNode r, int e) {
 		if (r == null)
 			return null;
@@ -65,37 +75,69 @@ class BST {
 		return find(root, e);
 	}
 
-	public boolean deleteBST(BinNode p, int e) {
+	/*
+	 * public boolean deleteBST(BinNode p, int e) { if (p == null) return false;
+	 * else if (e == p.getElement()) return delete(p); else if (e <
+	 * p.getElement()) return deleteBST(p.getLeft(), e); else if (e >
+	 * p.getElement()) return deleteBST(p.getRight(), e); else return false;//
+	 * 这句必须写吗？ }
+	 * 
+	 * public boolean deleteBST(int e) { return this.deleteBST(root, e); }
+	 * 
+	 * public boolean delete(BinNode p) { if (p.getLeft() == null) p =
+	 * p.getRight(); else if (p.getRight() == null) p = p.getLeft(); else {
+	 * BinNode s = p.getRight(); while (s.getLeft() != null) { s = s.getLeft();
+	 * } p.setElement(s.getElement()); delete(s); } return true; }
+	 */
+	// 以上写法只对指针可以修改（地址引用）来说的，对java来说，此方法不可行
+
+	public boolean remove(BinNode r, int e) {
+		BinNode[] t = find2(e);
+		BinNode p = t[0];
+		BinNode parent = t[1];
 		if (p == null)
 			return false;
-		else if (e == p.getElement())
-			return delete(p);
-		else if (e < p.getElement())
-			return deleteBST(p.getLeft(), e);
-		else if (e > p.getElement())
-			return deleteBST(p.getRight(), e);
-		else
-			return false;// 这句必须写吗？
-	}
-
-	public boolean deleteBST(int e) {
-		return this.deleteBST(root, e);
-	}
-
-	public boolean delete(BinNode p) {
-		if (p.getLeft() == null)
-			p = p.getRight();
-		else if (p.getRight() == null)
-			p = p.getLeft();
-		else {
+		if (p.getLeft() == null) {
+			if (parent == null)
+				root = p.getRight();
+			else {
+				if (p.getElement() < parent.getElement())
+					parent.setLeft(p.getRight());
+				else
+					parent.setRight(p.getRight());
+			}
+		} else if (p.getRight() == null) {
+			if (parent == null)
+				root = p.getLeft();
+			else {
+				if (p.getElement() < parent.getElement())
+					parent.setLeft(p.getLeft());
+				else
+					parent.setRight(p.getLeft());
+			}
+		} else {
 			BinNode s = p.getRight();
+			BinNode sp = null;
 			while (s.getLeft() != null) {
+				sp = s;
 				s = s.getLeft();
 			}
-			p.setElement(s.getElement());
-			delete(s);
+			if ((sp == null) && (parent != null)) {
+				BinNode temp = p.getLeft();
+				parent.setRight(p.getRight());
+				parent.getRight().setLeft(temp);
+			} else if ((sp == null) && (parent == null))
+				root.setRight(p.getRight());
+			else {
+				p.setElement(s.getElement());
+				sp.setLeft(s.getRight());
+			}
 		}
 		return true;
+	}
+
+	public boolean remove(int e) {
+		return this.remove(root, e);
 	}
 
 	public int getHeight(BinNode rt) {
@@ -148,12 +190,10 @@ class BST {
 		}
 
 		int ry = (c - 1) / 2;
-		System.out.print("step : ");
-		for (int i = 0; i < h; i++) {
-			System.out.print(step[i] + " ");
-		}
-		System.out.println();
-
+		/*
+		 * System.out.print("step : "); for (int i = 0; i < h; i++) {
+		 * System.out.print(step[i] + " "); } System.out.println();
+		 */
 		traverse(root, a, 0, ry, step);// 遍历整个树，把非空结点标注到a矩阵
 
 		for (int i = 0; i < h; i++) {
@@ -177,8 +217,8 @@ class BST {
 	public void traverse(BinNode p, int[][] a, int x, int y, int[] step) {
 		if (p != null) {
 
-			System.out.printf("Traverse : a[%d][%d] = %d\n", x, y,
-					p.getElement());
+			// System.out.printf("Traverse : a[%d][%d] = %d\n", x, y,
+			// p.getElement());
 			a[x][y] = p.getElement();
 
 			if (p.getLeft() != null) {
@@ -212,12 +252,12 @@ class BST {
 		for (int i = 0; i < a.length; i++) {
 			tree.insert(a[i]);
 		}
-		System.out.print("Inorder : ");
-		tree.inorder();
+		// System.out.print("Inorder : ");
+		// tree.inorder();
 		int h = tree.getHeight();
-		System.out.println(tree.root);
-		System.out.println("Height : " + h);
-		System.out.println("Node Count : " + tree.nodecount);
+		// System.out.println(tree.root);
+		// System.out.println("Height : " + h);
+		// System.out.println("Node Count : " + tree.nodecount);
 
 		int digits = 0;
 		if (tree.root != null) {
@@ -232,14 +272,17 @@ class BST {
 			}
 		}
 		tree.printtree(digits, "*");
-		System.out.println("Find : " + (tree.find(23)).getElement());
-		System.out.println("Find : parent :  " + (tree.find(23)).getElement());
-		System.out.println("Delete 12, 26");
-		tree.deleteBST(12);
-		tree.printtree(digits, ".");
-		tree.deleteBST(26);
-		tree.printtree(digits, ".");
+		// System.out.println("Find : " + (tree.find2(26))[0].getElement());
+		// System.out.println("Find : parent :  "
+		// + (tree.find2(26))[1].getElement());
+
+		int[] d = { 12, 4, 53, 23, 14, 6, 12, 26, 30, 88, 24, 10 };
+		for (int i = 0; i < d.length; i++) {
+			System.out.println("delete : " + d[i]);
+			tree.remove(d[i]);
+			tree.printtree(digits, (i % 2 == 0) ? "." : "*");
+		}
+		// tree.inorder();
 
 	}
-
 }
