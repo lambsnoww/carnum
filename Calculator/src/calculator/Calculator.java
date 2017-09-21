@@ -20,13 +20,12 @@ public class Calculator {
 	JTextField tf;
 	boolean flag;
 	boolean pointFlag;
-	double num;
-	double num1;
-
+	double a;
+	double b;
 	double output;
 	int n = 0;
 	JButton[] buttons;
-	Operator op;
+	char op;
 
 	private void createCalculator() {
 		JFrame.setDefaultLookAndFeelDecorated(true);
@@ -59,6 +58,7 @@ public class Calculator {
 		frame.pack();
 		frame.setVisible(true);
 
+		flag = false;
 		tf.addActionListener(new ButtonListener());
 		n = 0;
 		op = ' ';
@@ -71,49 +71,53 @@ public class Calculator {
 		public void actionPerformed(ActionEvent e) {
 			// TODO Auto-generated method stub
 			String comm = e.getActionCommand();
-			if (comm.equals("+"))
-				op = add;
-			if (Character.isDigit(comm.charAt(0))) {
-				if (n == 0) {
-					num = num * 10 + Double.parseDouble(comm);
+
+			if (Character.isDigit(comm.charAt(0)) || comm.equals("+/-")) {
+				if (comm.equals("+/-")) {
+					a = a * (-1);
+				} else if (n == 0) {
+					a = a * 10 + Double.parseDouble(comm);
 				} else {
-					num = num + Double.parseDouble(comm) / (Math.pow(10, n++));
+					a = a + Double.parseDouble(comm) / (Math.pow(10, n++));
 				}
-				tf.setText(String.valueOf(num));
+				tf.setText(String.valueOf(a));
 			} else if (comm.equals(".")) {
 				n = 1;
 			} else if (comm.equals("AC")) {
 				n = 0;
 				op = ' ';
-				num = num1 = output = 0;
+				a = b = output = 0;
+				flag = false;
 				tf.setText("0.0");
-			} else {// operator
+			} else {// operator or "="
+
 				char c = op;
 				op = comm.charAt(0);
-				if (c == ' ') {
-					num1 = num;
-					num = 0;
+				if (flag == false) {
+					b = a;
+					a = 0;
 					n = 0;
+					flag = true;
 				} else {
 					switch (c) {
 					case '+': {
-						output = num1 + num;
+						output = b + a;
 						tf.setText(String.valueOf(output));
 						break;
 					}
 					case '-': {
-						output = num1 - num;
+						output = b - a;
 						tf.setText(String.valueOf(output));
 						break;
 					}
 					case '*': {
-						output = num1 * num;
+						output = b * a;
 						tf.setText(String.valueOf(output));
 						break;
 					}
 					case '/': {
-						if (num != 0) {
-							output = num1 / num;
+						if (a != 0) {
+							output = b / a;
 							tf.setText(String.valueOf(output));
 						} else {
 							tf.setText("Invalid Divisor!");
@@ -125,8 +129,8 @@ public class Calculator {
 						break;
 					}
 					}// switch
-					num1 = output;
-					num = 0;
+					b = output;
+					a = 0;
 					n = 0;
 
 				}
