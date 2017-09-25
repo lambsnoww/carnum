@@ -1,3 +1,4 @@
 eclipse.preferences.version=1
-encoding//lin/image/test.py=utf-8
-encoding//lin/image/tools/Dir.py=utf-8
+encoding//lin/image/cartools/carNum.py=utf-8
+encoding//lin/image/cartools/note.py=utf-8
+encoding//lin/image/imgprcs.py=utf-8
