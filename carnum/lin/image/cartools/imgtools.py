@@ -5,6 +5,7 @@ Created on 2017年9月25日
 @author: linxue
 '''
 import numpy as np
+import cv2.cv as cv
 import cv2
 import os
 import pybrain
@@ -22,4 +23,19 @@ def getBlueRegion(img):
     cv2.waitKey()
     cv2.destroyAllWindows()
     return res
+    
+def toGrey(img):
+    b, g, r = cv2.split(img)
+    f = 0.3 * r + 0.59 * g + 0.11 * b
+    farray = cv.fromarray(f)
+    return img#####################
+
+
+    
+    
+
+    
+    
+    
+    
     
