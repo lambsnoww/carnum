@@ -13,45 +13,30 @@ import os
 import pybrain
 
 
-from cartools.carNum import getNames
+
+from cartools.names import getNames, saveNames
+from cartools.imgtools import getBlueRegion
 
 imgPath = getNames('imgNames.txt')
 print imgPath[0]
 
 img = cv2.imread(imgPath[0], cv2.CV_LOAD_IMAGE_COLOR)
 cv2.namedWindow("车辆图像", cv2.WINDOW_NORMAL)
-#cv2.imshow('车辆图', img)
-#cv2.waitKey()
-#cv2.destroyAllWindows()
 
-'''
-for i in range(0,500):
-    img.itemset((i,i,0),0)
-    img.itemset((i,i,1),0)
-    img.itemset((i,i,2),0)
-'''    
-
-res = cv2.resize(img, (img.shape[1] / 2, img.shape[0] / 2))
-'''
-cv2.imshow('', res)
-cv2.waitKey()
-cv2.destroyAllWindows()
-'''
 ###########
 e1 = cv2.getTickCount()
 
-b, g, r = cv2.split(img)
-f = 0.3 * r + 0.59 * g + 0.11 * b
-farray = cv.fromarray(f)
-#plt.imshow(farray, cmap = 'Greys_r')
-#plt.waitforbuttonpress()
 
-###################
-e2 = cv2.getTickCount()
-time = (e2 - e1) / cv2.getTickFrequency()
-print "time: "
-print time
-print cv2.useOptimized()
+blur = cv2.GaussianBlur(img, (5,5), 0)#高斯模糊
+print type(blur)
+#cv2.imwrite("blurred_img", blur)
+#cv2.imshow(blur)
+#cv2.waitKey()
+
+#res = getBlueRegion(img)
+#cv2.imshow(res)
+#cv2.waitKey()
+
 
 
 
