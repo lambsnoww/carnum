@@ -2,7 +2,7 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>smart</groupId>
+  <groupId>lin</groupId>
   <artifactId>luiscore</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
@@ -21,12 +21,10 @@
       <version>3.8.1</version>
       <scope>test</scope>
     </dependency>
-    <!-- https://mvnrepository.com/artifact/com.janeluo/ikanalyzer -->
     <dependency>
         <groupId>com.janeluo</groupId>
         <artifactId>ikanalyzer</artifactId>
         <version>2012_u6</version>
     </dependency>
-    
   </dependencies>
 </project>

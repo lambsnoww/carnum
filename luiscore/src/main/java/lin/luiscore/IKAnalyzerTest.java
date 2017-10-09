@@ -1,4 +1,4 @@
-package smart.luiscore.Demo;
+package lin.luiscore;
 
 import java.io.StringReader;
 
